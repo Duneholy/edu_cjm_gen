@@ -1,19 +1,25 @@
-# 🗺️ EdTech CJM Generator
+<div align="center">
+  <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/python/python.png" alt="Python" width="60" />
+  <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/javascript/javascript.png" alt="JavaScript" width="60" />
+  <h1>🗺️ EdTech CJM Generator</h1>
+  <p><strong>Генератор Customer Journey Map для образовательных продуктов с интеграцией AI</strong></p>
+  <p><strong>Автор:</strong> Yury Mikhno</p>
+</div>
 
-**Генератор Customer Journey Map для образовательных продуктов с интеграцией AI**
+<div align="center">
+  
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![OpenRouter](https://img.shields.io/badge/LLM-OpenRouter-6366f1?style=for-the-badge)](https://openrouter.ai/)
+[![GigaChat](https://img.shields.io/badge/LLM-GigaChat-21a038?style=for-the-badge)](https://developers.sber.ru/portal/products/gigachat)
 
-**Автор:** [Yury Mikhno](https://github.com/Duneholy)
-
-![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-3.x-000000?style=flat-square&logo=flask&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES_modules-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
-![OpenRouter](https://img.shields.io/badge/LLM-OpenRouter-6366f1?style=flat-square)
-![GigaChat](https://img.shields.io/badge/LLM-GigaChat-21a038?style=flat-square)
+</div>
 
 ---
 
 <p align="center">
-  <img src="docs/images/app-main.png" alt="Главный экран приложения — загрузка документов и настройки CJM" width="920" />
+  <img src="docs/images/app-main.png" alt="Главный экран приложения — загрузка документов и настройки CJM" width="600" />
 </p>
 
 **EdTech CJM Generator** (`edu_cjm_gen`) — локальное веб-приложение для методистов, продакт-менеджеров и авторов EdTech-программ. Загрузите бриф и концепцию проекта, настройте структуру карты — и нейросеть синтезирует материалы, задаст уточняющие вопросы и соберёт **интерактивную CJM в HTML**, готовую к просмотру и передаче заказчику.
@@ -41,27 +47,13 @@
 
 ## 🚀 Установка и запуск (Windows)
 
-Для работы нужен **Python 3.10+**. Если Python не установлен, лончер покажет ссылку на [python.org/downloads](https://www.python.org/downloads/) — установите его вручную с галочкой **Add Python to PATH** и запустите `run_windows.bat` снова.
+Для работы приложения необходим **Python 3.10+**.
 
-1. Склонируйте репозиторий или скачайте архив релиза.
+1. Склонируйте репозиторий или скачайте архив релиза и распакуйте его.
 2. Откройте папку проекта.
-3. Запустите **`run_windows.bat`** двойным щелчком.
+3. Запустите файл **`run_windows.bat`** двойным щелчком.
 
-Скрипт автоматически:
-
-* проверит наличие Python 3.10+ (команды `python` или `py -3`);
-* создаст виртуальное окружение `.venv` (при первом запуске);
-* обновит `pip` и установит зависимости из `requirements.txt`;
-* освободит порт `5050`, если он занят старым процессом;
-* откроет браузер на **http://127.0.0.1:5050**.
-
-> **Остановка сервера:** нажмите `Ctrl+C` в окне терминала.  
-> Если окно закрыли — освободите порт в PowerShell:
-> ```powershell
-> Get-NetTCPConnection -LocalPort 5050 -State Listen |
->   Select-Object -ExpandProperty OwningProcess -Unique |
->   ForEach-Object { Stop-Process -Id $_ -Force }
-> ```
+Скрипт полностью **автоматизирован**: проверит наличие Python, создаст виртуальное окружение, установит зависимости и откроет приложение в браузере.
 
 ### Запуск вручную (Windows / macOS / Linux)
 
@@ -145,32 +137,6 @@ python run.py
 * **Новая CJM** — начать заново.
 
 Сгенерированные файлы сохраняются локально в папке `output/`.
-
----
-
-## 🏗️ Архитектура
-
-```
-edu_cjm_gen/
-  run.py                 # точка входа
-  run_windows.bat        # запуск для Windows (вызывает launch.ps1)
-  launch.ps1             # установка зависимостей и старт сервера
-  backend/
-    main.py              # сборка Flask-приложения
-    routers/             # HTTP API (analyze, generate, models)
-    services/
-      document_parser.py # парсинг xls / docx / txt / md
-      cjm_builder.py     # HTML-просмотрщик CJM
-      cjm_rows.py        # конфигурация строк
-      ai/                # OpenRouter + GigaChat
-  frontend/
-    index.html, styles.css
-    js/                  # ES-модули (upload, step2, questions, …)
-  output/                # сгенерированные HTML (gitignore)
-  docs/images/           # скриншоты для README
-```
-
-**Стек:** Python · Flask · vanilla JavaScript (ES modules) · OpenRouter / GigaChat API
 
 ---
 
