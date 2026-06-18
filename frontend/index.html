@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CJM Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/assets/cjm-logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="site-brand" href="/" aria-label="Генератор CJM — на главную">
+        <span class="site-logo-mark">
+          <img src="/assets/cjm-logo.svg" width="24" height="24" alt="" />
+        </span>
+        <span class="site-logo">Генератор CJM</span>
+      </a>
+      <nav class="site-nav">
+        <span class="nav-tag">EdTech CJM Builder · LLM API · GigaChat · OpenRouter</span>
+        <button id="toggleSettings" class="header-button" type="button">Настройки ИИ</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="hero">
+      <h1>
+        Генератор Customer Journey Map
+        <span class="hero-highlight">для EdTech продуктов</span>
+      </h1>
+      <p class="description">
+        Загрузите три документа, настройте строки и столбцы CJM — система синтезирует материалы,
+        задаст до 5 уточняющих вопросов и соберёт интерактивную карту в HTML.
+      </p>
+    </section>
+
+    <section class="panel" id="stepUpload">
+      <div class="panel-head">
+        <span class="step-badge">Шаг 1</span>
+        <h2>Загрузка документов</h2>
+      </div>
+      <p class="settings-hint panel-subtitle">Форматы: xls · xlsx · doc · docx · txt · md</p>
+      <div class="upload-grid">
+        <label class="upload-card">
+          <span class="upload-label">1. Бриф проекта</span>
+          <span class="upload-hint">Задачи, стейкхолдеры, ЦА</span>
+          <input type="file" id="fileBrief" accept=".xls,.xlsx,.doc,.docx,.txt,.md" />
+          <span class="file-name" data-for="fileBrief">Файл не выбран</span>
+        </label>
+        <label class="upload-card">
+          <span class="upload-label">2. Концепция проекта</span>
+          <span class="upload-hint">Модули, уроки, MVP</span>
+          <input type="file" id="fileConcept" accept=".xls,.xlsx,.doc,.docx,.txt,.md" />
+          <span class="file-name" data-for="fileConcept">Файл не выбран</span>
+        </label>
+        <label class="upload-card">
+          <span class="upload-label">3. Дополнительные детали</span>
+          <span class="upload-hint">Всё важное вне брифа и концепции</span>
+          <input type="file" id="fileDetails" accept=".xls,.xlsx,.doc,.docx,.txt,.md" />
+          <span class="file-name" data-for="fileDetails">Файл не выбран</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="panel" id="stepCjmSettings">
+      <div class="panel-head">
+        <span class="step-badge">Шаг 2</span>
+        <h2>Настройки CJM</h2>
+      </div>
+      <p class="settings-hint">Настройте структуру карты перед анализом материалов.</p>
+      <div class="cjm-settings-grid">
+        <button type="button" class="settings-card" id="btnOpenRows">
+          <span class="settings-card-title">Строки CJM</span>
+          <span class="settings-card-hint">Какие ряды будут в таблице: действия ученика, наставника, артефакты…</span>
+          <span class="settings-card-status" id="rowsStatus">6 строк по умолчанию</span>
+        </button>
+        <button type="button" class="settings-card" id="btnOpenColumns">
+          <span class="settings-card-title">Столбцы CJM</span>
+          <span class="settings-card-hint">Степень детализации: верхнеуровневая карта или подробная по урокам</span>
+          <span class="settings-card-status" id="columnsStatus">Не задано</span>
+        </button>
+      </div>
+      <div class="actions">
+        <button type="button" id="btnAnalyze" class="primary-button">Анализировать и задать вопросы</button>
+      </div>
+      <div class="status hidden" id="statusAnalyze"></div>
+    </section>
+
+    <section class="panel hidden" id="stepQuestions">
+      <div class="panel-head">
+        <span class="step-badge">Шаг 3</span>
+        <h2>Уточняющие вопросы</h2>
+      </div>
+      <div class="summary-box" id="programSummary"></div>
+      <div class="gaps-box hidden" id="detectedGaps"></div>
+      <form id="questionsForm" class="questions-list"></form>
+      <div class="actions">
+        <button type="button" id="btnGenerate" class="primary-button accent">Собрать CJM</button>
+      </div>
+      <div class="status hidden" id="statusGenerate"></div>
+    </section>
+
+    <section class="panel hidden" id="stepResult">
+      <div class="panel-head">
+        <span class="step-badge step-badge-done">Готово</span>
+        <h2>Результат</h2>
+      </div>
+      <div class="result-box" id="resultInfo"></div>
+      <div class="actions">
+        <a id="btnView" class="primary-button" href="#" target="_blank">Открыть CJM</a>
+        <a id="btnDownload" class="secondary-button" href="#" download>Скачать HTML</a>
+        <button type="button" id="btnRestart" class="secondary-button">Новая CJM</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>edu_cjm_gen © Yury Mikhno, 2026</span>
+  </footer>
+
+  <div class="modal-backdrop hidden" id="modalBackdrop" aria-hidden="true">
+    <div class="modal hidden" id="modalAi" role="dialog" aria-labelledby="modalAiTitle">
+      <button type="button" class="modal-close" data-close-modal aria-label="Закрыть">×</button>
+      <div class="modal-body settings-panel">
+        <h2 id="modalAiTitle">Настройки ИИ</h2>
+        <div class="settings-grid">
+          <label class="full-width">
+            Провайдер
+            <select id="providerSelect">
+              <option value="openrouter">OpenRouter</option>
+              <option value="gigachat">GigaChat API (Сбер)</option>
+            </select>
+          </label>
+          <label class="full-width" id="credentialWrap">
+            <span id="credentialLabelText">API-ключ</span>
+            <input type="password" id="credential" placeholder="sk-or-v1-..." autocomplete="off" />
+          </label>
+          <label class="full-width hidden" id="scopeWrap">
+            Scope (тариф GigaChat)
+            <select id="scopeSelect">
+              <option value="GIGACHAT_API_PERS">GIGACHAT_API_PERS — физлица</option>
+              <option value="GIGACHAT_API_B2B">GIGACHAT_API_B2B — ИП / юрлица</option>
+              <option value="GIGACHAT_API_CORP">GIGACHAT_API_CORP — корпоративный</option>
+            </select>
+          </label>
+          <label class="full-width">
+            Модель
+            <div class="model-row">
+              <select id="modelSelect">
+                <option value="qwen/qwen3.7-plus">qwen/qwen3.7-plus</option>
+              </select>
+              <button type="button" id="loadModels" class="secondary-button">Загрузить список</button>
+            </div>
+          </label>
+        </div>
+        <p class="settings-hint" id="settingsHint">
+          Ключ хранится в браузере (localStorage) и в памяти сервера на время сессии.
+        </p>
+        <p class="settings-hint hidden" id="gigachatHint">
+          Authorization Key — base64-ключ из
+          <a href="https://developers.sber.ru/studio/workspaces" target="_blank" rel="noopener">GigaChat Studio</a>.
+          Тарифы и модели:
+          <a href="https://developers.sber.ru/docs/ru/gigachat/api/tariffs" target="_blank" rel="noopener">документация</a>.
+        </p>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="modalCjmRows" role="dialog" aria-labelledby="modalCjmRowsTitle">
+      <button type="button" class="modal-close" data-close-modal aria-label="Закрыть">×</button>
+      <div class="modal-body settings-panel">
+        <h2 id="modalCjmRowsTitle">Строки CJM</h2>
+        <p class="settings-hint">
+          Перетаскивайте строки для смены порядка. Можно удалять и добавлять новые — они станут рядами в итоговой CJM.
+        </p>
+        <ul id="cjmRowsList" class="cjm-rows-list"></ul>
+        <div class="actions">
+          <button type="button" id="addCjmRow" class="secondary-button">Добавить строку</button>
+          <button type="button" id="resetCjmRows" class="secondary-button">Сбросить по умолчанию</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal hidden" id="modalCjmColumns" role="dialog" aria-labelledby="modalCjmColumnsTitle">
+      <button type="button" class="modal-close" data-close-modal aria-label="Закрыть">×</button>
+      <div class="modal-body settings-panel">
+        <h2 id="modalCjmColumnsTitle">Столбцы CJM · Степень детализации</h2>
+        <p class="settings-hint">
+          Опишите, сколько столбцов (этапов) нужно в CJM и насколько детально их раскрывать.
+        </p>
+        <label class="full-width">
+          Степень детализации столбцов
+          <textarea id="cjmColumnsInput" rows="6" placeholder="Укажите степень детализации CJM: нужна верхнеуровневая карта с небольшим количеством столбцов или подробная — с описанием каждого урока?"></textarea>
+        </label>
+        <p class="settings-hint">
+          Подсказка: верхнеуровневая карта — 5–8 столбцов по модулям/этапам; подробная — столбец на каждый урок или ключевой шаг программы.
+        </p>
+        <div class="actions">
+          <button type="button" id="saveCjmColumns" class="primary-button">Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loader hidden" id="loader">
+    <div class="loader-card">
+      <div class="spinner"></div>
+      <p id="loaderText">Обработка...</p>
+    </div>
+  </div>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
